@@ -11,11 +11,26 @@ var timeCounter = function () {
 $(timeCounter());
 
 $(setInterval(timeCounter, 1000));
+var currentHour = dayjs().hour();
+
+$(".time-block").each(function () {
+  var blockHour = $(this).attr("id").split("-")[1];
+  blockHour = parseInt(blockHour);
+  
+  if (blockHour === currentHour){
+    $(this).addClass("present")
+  } else if (blockHour < currentHour) {
+    $(this).addClass("past")
+  } else if (blockHour > currentHour) {
+    $(this).addClass("future")
+  }
+
+});
 
 $(
-  saveButton.on("click", function (event) {
+  saveButton.on("click", function () {
     var hourId = "#" + this.parentElement.id;
-    var plans = $(hourId).children().eq(1).val();
+    var plans = $(hourId).children("textarea").val();
     localStorage.setItem(hourId, plans);
   })
 );
@@ -24,8 +39,7 @@ for (var i = 0; i < localStorage.length; i++) {
   var storageKey = localStorage.key(i).split("#")[1];
   var displayAgenda = localStorage.getItem("#" + storageKey);
   $("#" + storageKey)
-    .children()
-    .eq(1)
+    .children("textarea")
     .text(displayAgenda);
 }
 
